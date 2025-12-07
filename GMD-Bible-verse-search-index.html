@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bible Search</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+        input {
+            width: 300px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            width: 450px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Bible Verse Search</h2>
+
+<input type="text" id="search" placeholder="Enter verse e.g. John 3:16">
+<button onclick="searchBible()">Search</button>
+
+<div id="result"></div>
+
+<script>
+function searchBible() {
+    let query = document.getElementById("search").value;
+
+    if (query.trim() === "") {
+        alert("Please enter a Bible verse.");
+        return;
+    }
+
+    let url = "https://bible-api.com/" + encodeURIComponent(query);
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("result").innerHTML = 
+                    "<b>Error:</b> Verse not found.";
+            } else {
+                document.getElementById("result").innerHTML = 
+                    "<h3>" + data.reference + "</h3>" +
+                    "<p>" + data.text + "</p>" +
+                    "<p><i>Translation: " + data.translation_name + "</i></p>";
+            }
+        })
+        .catch(error => {
+            document.getElementById("result").innerHTML = "An error occurred.";
+            console.error(error);
+        });
+}
+</script>
+
+</body>
+</html>
